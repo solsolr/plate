@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+  <h1>제목 - {{post.title}}</h1><br>
+  날짜 - {{post.date}}<br>
+  본문 - {{post.body}}<br>
+  {% if post.image %}
+    <img src="{{post.image.url}}">
+    <br><br>
+  {% endif %}
+</div>
+{% endblock %}

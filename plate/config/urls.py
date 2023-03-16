@@ -15,17 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from pybo import views
-from pybo.views import base_views
 from django.conf import settings
 from django.conf.urls.static import static
+from plate import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('pybo/', include('pybo.urls')),
-    path('common/', include('common.urls')),
     path('plate/', include('plate.urls')),
-    path('', base_views.index, name='index'),    # '/' 에 해당되는 path
+    path('', views.index, name='index'),    # '/' 에 해당되는 path
+
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)  # 이미지 url 경로 설정
+
+urlpatterns += static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+
 # 불러올 때는 plate와 동등한 위치인 media에서 불러오므로 프로젝트 경로에서 불러와야 한다.

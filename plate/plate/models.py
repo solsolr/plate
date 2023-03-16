@@ -1,9 +1,12 @@
-from django.db import models
+0from django.db import models
+
 
 class Admin(models.Model):  # 관리자
     a_name = models.CharField('관리자', max_length=15)  # 글자수 제한 있는 varchar 자료형
     a_id = models.CharField('아이디', max_length=15, primary_key=True)  # 기본 키
     a_pw = models.CharField('비밀번호', max_length=15)
+    a_de = models.IntegerField('검출한 수', default=0)
+    a_wh = models.IntegerField('보류한 수',default=0)
 
     class Meta:
         db_table = 'Admin'  # 테이블 명
@@ -11,9 +14,7 @@ class Admin(models.Model):  # 관리자
 
 class Car(models.Model):  # 차
     car_num = models.CharField('번호판', max_length=15, unique=True)  # 차 번호는 유일하다.
-    car_image = models.ImageField(upload_to="images/", unique=True)  # 이미지 url 저장
-    create_date = models.DateTimeField('생성날짜')
-
+    car_image = models.ImageField(upload_to="images/",unique=True)
     class Meta:
         db_table = 'Car'  # 테이블 명
 
@@ -28,3 +29,4 @@ class Citizen(models.Model):  # 시민
 
     class Meta:
         db_table = 'Citizen'  # 테이블 명
+

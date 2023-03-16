@@ -33,8 +33,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'plate.apps.PlateConfig',
-    'common.apps.CommonConfig',
-    'pybo.apps.PyboConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -127,7 +125,7 @@ STATICFILES_DIRS = [
 ]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')    # 이미지 url 경로 설정을 위해
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # 로그인 성공후 이동하는 URL
 LOGIN_REDIRECT_URL = '/'

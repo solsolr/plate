@@ -1,76 +1,128 @@
-{% extends 'base.html' %}
-{% load pybo_filter %}
-{% block content %}
-<div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>번호</th>
-            <th style="width:50%">번호판 이미지</th>
-            <th>번호판</th>
-            <th>생성일시</th>
-        </tr>
-        </thead>
-        <tbody>
+{% load plate_filter %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link href="{% static 'reset.css' %}" rel="stylesheet">
+    <link href="{% static 'style.css' %}" rel="stylesheet">
+    <title>Hello, plate</title>
+</head>
+<body style="font-family:'LeeSeoyun'!important;">
+
+<header>
+    <div id="logo"><img src="/static/image/cp949.png"></div>
+    <div id="blank">&nbsp;</div>
+    <div id="site_title"><a href="{% url 'plate:index' %}">CP 949</a></div>
+    <div id="login"><a href="#">로그인</a></div>
+</header>
+<div style="clear:both"></div>
+<main>
+    <nav id="nav">
+        <ul>
+            <li style="border-top:2px solid gray;">미처리 건수:&emsp;<b>{{ car_list.paginator.count }}</b></li>
+            <li>검출한 건수:&emsp;</li>
+            {% for ad in admin %}
+            <li style="border-bottom:2px solid gray;">보류한 건수:&emsp;<b>{{ ad.a_wh }}</b></li>
+            {% endfor %}
+        </ul>
+    </nav><!--//nav-->
+
+    <!-- 시민 정보 -->
+    <div id="info">
+        <ul>
+            <li><span>번호판  </span> <span>14노 8695</span></li>
+            <li><span>차주  </span> <span>서성준</span></li>
+            <li><span>단속횟수  </span> <span> 0회</span></li>
+            <li><span>연락처  </span> <span>010-2583-3226</span></li>
+            <li><span>거주지  </span> <span>서울시 동작구 흑석동</span></li>
+            <li><span>정확도  </span> <span>0.98</span></li>
+        </ul>
+    </div><!--//info-->
+
+    <div id="photo"> <!-- 차량 정보 -->
         {% if car_list %}
         {% for car in car_list %}
-        <tr>
-            <td>
-                <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
-                {{ car_list.paginator.count|sub:car_list.start_index|sub:forloop.counter0|add:1 }}
-            </td>
-            <td><img src="{{car.car_image.url}}"></td>
-            <td>
-                <a href="{% url 'plate:detail2' car.id %}">{{ car.car_num }}</a>
-            </td>
-            <td>{{ car.create_date }}</td>
-        </tr>
+        <div class="img"><img src="{{ car.car_image.url }}"></div> <!-- 이미지 -->
         {% endfor %}
-        {% else %}
-        <tr>
-            <td colspan="4">번호판 영상이 없습니다.</td>
-        </tr>
         {% endif %}
-        </tbody>
-    </table>
-    <!-- 페이징처리 시작 -->
-    <ul class="pagination justify-content-center">
-        <!-- 이전페이지 -->
-        {% if car_list.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ car_list.previous_page_number }}">이전</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
-        </li>
-        {% endif %}
-        <!-- 페이지리스트 -->
-        {% for page_number in car_list.paginator.page_range %}
-        {% if page_number >= car_list.number|add:-5 and page_number <= car_list.number|add:5 %}
-        {% if page_number == car_list.number %}
-        <li class="page-item active" aria-current="page">
-            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-        </li>
-        {% else %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
-        </li>
-        {% endif %}
-        {% endif %}
+        <!-- 페이징 처리 부분 -->
+        <div id="photo_control">
+            {% if car_list.has_previous %}
+            <a href="?page={{car_list.previous_page_number}}">
+                <button type="button"><</button>
+            </a>
+
+            {% else %}
+            <a href="#" tabindex="-1" aria-disabled="true">
+                <button type="button"><</button>
+            </a>
+
+            {% endif %}
+
+                <a style="color:orange; font-size:1.2vw; vertical-align:bottom;"
+                   href="?page={{ car_list.start_index}}">{{ car_list.start_index }}</a> <!-- 현재 페이지 번호 -->
+
+                &nbsp;<span style="color:skyblue; font-size:1.2vw; vertical-align:bottom;">/</span>&nbsp;
+
+                <a style="color:orange; font-size:1.2vw; vertical-align:bottom;"
+                   href="?page={{ car_list.paginator.count }}">{{ car_list.paginator.count }}</a> <!-- 전체 페이지 개수 -->
+
+            {% if car_list.has_next %}
+            <a href="?page={{car_list.next_page_number}}">
+                <button type="button">></button>
+            </a>
+            {% else %}
+            <a href="#" tabindex="-1" aria-disabled="true">
+                <button type="button">></button>
+            </a>
+            {% endif %}
+
+
+        </div>
+          <!-- 페이징 처리 끝 -->
+
+    </div><!--//photo-->
+
+        <a class="register" href="{% url 'plate:plate_create' %}"> <!-- url 별칭을 활용한 차량 등록 -->
+            <button><b>새 차량등록</b></button>
+        </a>
+        <a class="detect" href="{% url 'plate:index' %}"> <!-- url 별칭을 활용한 번호 검출 -->
+            <button><b>번호판 검출</b></button>
+        </a>
+
+    {% if car_list %} <!-- 차가 있을 때만 보류 표시 -->
+        {% for car in car_list %}
+            {% for ad in admin %}
+        <a class="delete withhold" href="javascript:void(0)"
+        data-uri="{% url 'plate:plate_withhold' car.id ad.a_id %}"> <!-- url 별칭을 활용한 번호 보류 -->
+            <button><b>번호판 보류</b></button>
+        </a>
+            {% endfor %}
         {% endfor %}
-        <!-- 다음페이지 -->
-        {% if car_list.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ car_list.next_page_number }}">다음</a>
-        </li>
-        {% else %}
-        <li class="page-item disabled">
-            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
-        </li>
-        {% endif %}
-    </ul>
-    <!-- 페이징처리 끝 -->
-    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">번호판 등록하기</a>
-</div>
+    {% endif %}
+
+</main>
+
+<footer>
+    <p>ⓒCopyright 2022. <b>CP949</b> All Rights Reserved.</p>
+</footer>
+
+{% block script %}
+<script type='text/javascript'>
+const delete_elements = document.getElementsByClassName("delete");
+Array.from(delete_elements).forEach(function(element) {
+    element.addEventListener('click', function() {
+        if(confirm("정말로 보류하시겠습니까?")) {
+            location.href = this.dataset.uri;
+        };
+    });
+});
+</script>
 {% endblock %}
+
+</body>
+</html>

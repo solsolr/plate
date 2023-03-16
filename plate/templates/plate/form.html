@@ -1,0 +1,62 @@
+{% load static %}
+    <link rel="stylesheet" href="{% static 'form.css'%}">
+    <link rel="stylesheet" href="{% static 'reset.css'%}">
+{% block content %}
+<div style="font-family:'LeeSeoyun'!important;" class="container">
+    <!-- message 표시 -->
+    {% if messages %}
+    <div class="alert alert-danger my-3" role="alert">
+    {% for message in messages %}
+        <strong>{{ message.tags }}</strong>
+        <ul><li>{{ message.message }}</li></ul>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <h2 class="my-3 border-bottom pb-2">차량 등록</h2>
+    <form method="post" action ="{% url 'plate:start' %}" enctype="multipart/form-data"> <!-- 이미지 저장을 위함 -->
+        {% csrf_token %}
+        <!-- 오류표시 Start -->
+        {% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+            {% for field in form %}
+            {% if field.errors %}
+            <div>
+                <strong>{{ field.label }}</strong>
+                {{ field.errors }}
+            </div>
+            {% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        <!-- 오류표시 End -->
+        <div id="plate_num" class="mb-3">
+            <label for="car_num" class="form-label">번호판 </label>
+            <input type="text" class="form-control" name="car_num" id="car_num" placeholder="입력해주세요"
+                   value="{{ form.car_num.value|default_if_none:'' }}">
+        </div>
+        <div id="plate_img" class="mb-3">
+            <label for="car_image" class="form-label">이미지 </label>
+            <input name="car_image" id="car_image" type="file" onchange="setThumbnail(event)">
+            <div id="image_container"></div>
+        </div>
+        <div id="va">
+        <button style="font-family:'LeeSeoyun'!important;" type="submit" class="btn btn-primary my-2">저장하기</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+{% block script %}
+<script>
+      function setThumbnail(event) {
+        var reader = new FileReader();
+
+        reader.onload = function(event) {
+          var img = document.createElement("img");
+          img.setAttribute("src", event.target.result);
+          document.querySelector("div#image_container").appendChild(img);
+        };
+
+        reader.readAsDataURL(event.target.files[0]);
+      }
+    </script>
+{% endblock %}
