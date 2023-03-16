@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load pybo_filter %}
+{% block content %}
+<div>
+    <table class="table">
+        <thead>
+        <tr>
+            <th>번호</th>
+            <th style="width:50%">번호판 이미지</th>
+            <th>번호판</th>
+            <th>생성일시</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% if car_list %}
+        {% for car in car_list %}
+        <tr>
+            <td>
+                <!-- 번호 = 전체건수 - 시작인덱스 - 현재인덱스 + 1 -->
+                {{ car_list.paginator.count|sub:car_list.start_index|sub:forloop.counter0|add:1 }}
+            </td>
+            <td><img src="{{car.car_image.url}}"></td>
+            <td>
+                <a href="{% url 'plate:detail2' car.id %}">{{ car.car_num }}</a>
+            </td>
+            <td>{{ car.create_date }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+            <td colspan="4">번호판 영상이 없습니다.</td>
+        </tr>
+        {% endif %}
+        </tbody>
+    </table>
+    <!-- 페이징처리 시작 -->
+    <ul class="pagination justify-content-center">
+        <!-- 이전페이지 -->
+        {% if car_list.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ car_list.previous_page_number }}">이전</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">이전</a>
+        </li>
+        {% endif %}
+        <!-- 페이지리스트 -->
+        {% for page_number in car_list.paginator.page_range %}
+        {% if page_number >= car_list.number|add:-5 and page_number <= car_list.number|add:5 %}
+        {% if page_number == car_list.number %}
+        <li class="page-item active" aria-current="page">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% else %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+        </li>
+        {% endif %}
+        {% endif %}
+        {% endfor %}
+        <!-- 다음페이지 -->
+        {% if car_list.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ car_list.next_page_number }}">다음</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+            <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음</a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-- 페이징처리 끝 -->
+    <a href="{% url 'pybo:question_create' %}" class="btn btn-primary">번호판 등록하기</a>
+</div>
+{% endblock %}
