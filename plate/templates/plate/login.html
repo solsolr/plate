@@ -1,0 +1,16 @@
+
+{% load static %}
+    <link rel="stylesheet" href="{% static 'login.css' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'reset.css' %}">
+{% block content %}
+<div class="container">
+    <form method="post" action="{% url 'plate:login' %}">
+        {% csrf_token %}
+        <div class="align">
+        <span>아이디 : </span><input type="text" name="id"><br>
+        <span>비밀번호 : </span><input type="password" name="password">
+        <div id="login_btn"><input type="submit" value="로그인"></div>
+            </div>
+    </form>
+</div><!--//container-->
+{% endblock %}

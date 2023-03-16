@@ -10,11 +10,11 @@ def SVM_create(type, max_iter, epsilon):
     svm.setTermCriteria((type, max_iter, epsilon))      # 학습 반복 조건 지정
     return svm
 
-nsample = 140
+nsample = 1200
 trainData = [cv2.imread("images/plate/%03d.png" %i, 0) for i in range(nsample)]
 trainData = np.reshape( trainData, (nsample, -1)).astype("float32")
 labels = np.zeros((nsample,1), np.int32)
-labels[:70] = 1
+labels[:600] = 1
 
 print("SVM 객체 생성")
 svm = SVM_create(cv2.TERM_CRITERIA_MAX_ITER, 1000, 1e-6)   # SVM 객체 생성

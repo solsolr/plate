@@ -1,5 +1,7 @@
 import numpy as np, cv2
+
 import random
+
 
 def preprocessing(car_no):
     image = cv2.imread("images/car/%02d.jpg" %car_no, cv2.IMREAD_COLOR)
@@ -16,14 +18,16 @@ def preprocessing(car_no):
     cv2.imshow("th_img", th_img); cv2.imshow("morph", morph)   #결과표시
     return image, morph
 
+
 def verify_aspect_size(size):
     w, h = size
     if h == 0 or w == 0: return False
 
-    aspect = h/ w if h > w else w/ h       # 종횡비 계산 #세로가 길면 역수 취함
+    aspect = h/ w if h > w else w / h       # 종횡비 계산 #세로가 길면 역수 취함
     chk1 = 300 < (h * w) < 1200          # 번호판 넓이 조건
     chk2 = 2.0 < aspect < 6.5       # 번호판 종횡비 조건
     return (chk1 and chk2)
+
 
 def find_candidates(image):
     results, hier = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)

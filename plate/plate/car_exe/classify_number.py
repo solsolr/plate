@@ -45,4 +45,4 @@ def start(car_no):
         print("번호판 미검출")
     src = "media/images/r_%s" %car_no
     cv2.imwrite(src, image)
-    return image
+    return [image,plate_no]

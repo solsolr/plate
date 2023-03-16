@@ -33,6 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'plate.apps.PlateConfig',
+    'django_cleanup.apps.CleanupConfig', # 이미지 자동 추가 삭제를 위함
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
