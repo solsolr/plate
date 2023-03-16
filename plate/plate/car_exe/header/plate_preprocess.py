@@ -21,7 +21,7 @@ def verify_aspect_size(size):
     if h == 0 or w == 0: return False
 
     aspect = h/ w if h > w else w/ h       # 종횡비 계산 #세로가 길면 역수 취함
-    chk1 = 3000 < (h * w) < 12000          # 번호판 넓이 조건SS
+    chk1 = 3000 < (h * w) < 12000          # 번호판 넓이 조건
     chk2 = 2.0 < aspect < 6.5       # 번호판 종횡비 조건
     return (chk1 and chk2)
 
